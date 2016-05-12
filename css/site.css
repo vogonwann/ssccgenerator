@@ -1,0 +1,22 @@
+.placeholder {
+  border-top: 3px solid darkorange;
+  background-color: lightgray;
+  padding: 20px;
+}
+
+.large-text {
+  font-size: 72px;
+  font-weight: bold;
+}
+
+.generated-number {
+  color: darkorange;
+}
+
+.inline {
+  display: inline;
+}
+
+.hidden {
+  display: none;
+}

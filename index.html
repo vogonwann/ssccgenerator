@@ -6,9 +6,10 @@
   <title>SSCC code generator</title>
   <script src="bower_components/jquery/dist/jquery.js"></script>
   <link rel="stylesheet" type="text/css" href="bower_components/bootstrap/dist/css/bootstrap.css" />
+  <link rel="stylesheet" type="text/css" href="css/site.css" />
 </head>
 <body>
-  <div class="row">
+  <div class="row placeholder">
       <div class="form-horizontal" id="generator-form">
         <div class="form-group col-sm-12">
           <label for="company-prefix" class="col-sm-2 control-label">Company prefix:</label>
@@ -24,35 +25,43 @@
         </div>
         <div class="form-group col-sm-12">
           <div class="col-sm-offset-2 col-sm-10">
-            <button id="submit" class="btn btn-default">Generate</button>
+            <button id="submit" class="btn btn-warning">Generate</button>
           </div>
         </div>
       </div>
   </div>
-  <div class="row">
+  <div class="row result">
     <div class="col-sm-12">
       <div class="jumbotron" id="sscc-placeholder">
-        <h1 id="sscc"></h1>
+        <div id="sscc" class="col-sm-offset-2 large-text inline"></div>
+        <div id="generated" class="large-text generated-number inline"></div>
+        <button role="button" class="btn btn-warning inline" id="btn-copy">Copy</button>
+        <textarea name="sscc-hidden" rows="1" cols="18" id="sscc-hidden" class="hidden"></textarea>
       </div>
     </div>
   </div>
 </body>
 <script>
   $(function() {
-    $("#submit").click(function() {
+    $('#submit').click(function() {
       generateSscc();
     })
+
+    $('#btn-copy').hide();
+    $('#btn-copy').click(function () {
+      copyToClipboard();
+    })
     function generateSscc () {
-      var cmpPrefix = $("#company-prefix").val();
+      var cmpPrefix = $('#company-prefix').val();
       if (cmpPrefix.length !== 7) {
-        alert("Company prefix must be 7 characters long!");
+        alert('Company prefix must be 7 characters long!');
         return;
       }
-      var serialNr = $("#serial-number").val();
+      var serialNr = $('#serial-number').val();
       if (serialNr.length !== 9) {
-        alert ("Serial number must be 9 characters long!");
+        alert ('Serial number must be 9 characters long!');
       }
-      var sscc = "0" + cmpPrefix + serialNr;
+      var sscc = '0' + cmpPrefix + serialNr;
       var i = 0;
       var sum = 0;
       while (i < sscc.length) {
@@ -70,8 +79,22 @@
         sum++;
         control++;
       }
-      sscc = sscc + control.toString();
-      $("#sscc").html(sscc);
+      var generatedNr = control.toString();
+
+      $('#sscc').html(sscc);
+      $('#generated').html(generatedNr);
+      $('#sscc-hidden').html(sscc + generatedNr);
+      $('#btn-copy').show();
+    }
+
+    function copyToClipboard() {
+      $('#sscc-hidden').focus().select();
+      try {
+        document.execCommand("copy");
+      }
+      catch (err) {
+        console.log('Unable to copy to cliboard!' + '\n\r' + err.message);
+      }
     }
   })
 </script>
